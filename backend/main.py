@@ -6,9 +6,10 @@ from fastapi.middleware.cors import CORSMiddleware  # <-- add this import
 
 
 from fastapi import FastAPI
-from schemas import ChatRequest, Turn, LoanChartRequest, GetInterest
+from schemas import ChatRequest, Turn, LoanChartRequest, GetInterest, LeaseChartRequest
 from loan_calculator import build_loan_chartjs_data
 from credit_score_calculator import apr_percent_from_credit_score
+from lease_calculator import build_lease_chartjs_data_no_tax
 
 app = FastAPI(title="Toyota Hackathon Backend")
 app.add_middleware(
@@ -38,7 +39,20 @@ def chat(payload: ChatRequest) -> ChatRequest:
     # RootModel[List[Turn]]: return using `root=...` in Pydantic v2
     return ChatRequest(root=response_turns)
 
-
+@app.post("/lease/calcular")
+def lease_calcular(body: LeaseChartRequest) -> Dict[str, Any]:
+    """
+    Build Chart.js-ready lease breakdown WITHOUT tax.
+    """
+    try:
+        return build_lease_chartjs_data_no_tax(
+            vehicle_amount=body.vehicle_amount,
+            term_months=body.term_months,
+            money_factor=body.money_factor,
+            acquisition_fee=body.acquisition_fee,
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
 
 @app.post("/loan/Calculator")
 def loan_calcular(body: LoanChartRequest) -> Dict[str, Any]:

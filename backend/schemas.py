@@ -91,6 +91,20 @@ class GetInterest(BaseModel):
     credit_score : float
 
 
+
+
+class LeaseChartRequest(BaseModel):
+    """
+    Request body for /lease/calcular (no tax).
+    vehicle_amount and term_months are required.
+    money_factor and acquisition_fee are optional overrides.
+    """
+    vehicle_amount: float = Field(..., gt=0, description="Vehicle price (cap cost baseline)")
+    term_months: int = Field(..., gt=0, description="Lease term in months")
+    money_factor: Optional[float] = Field(0.00190, ge=0, description="Lease money factor (MF ~ APR/2400)")
+    acquisition_fee: Optional[float] = Field(695.0, ge=0, description="Acquisition fee to roll into cap cost")
+
+
 # Rebuild models to resolve any postponed annotations when using __future__ annotations
 LoanCore.model_rebuild()
 LeaseCore.model_rebuild()
