@@ -130,6 +130,21 @@ export default function LoanQuotation() {
           <button className="btn" onClick={() => navigate("/?mode=results") }>
             Back
           </button>
+          <button
+            className="btn"
+            style={{ background: TOYOTA_RED, color: "white", marginLeft: "auto" }}
+            onClick={() => {
+              const params = new URLSearchParams({
+                vehicle_name: vehicleName,
+                monthly_payment: String(data?.totals.monthly_payment_total || 0),
+                down_payment: String(data?.totals.customer_due_at_signing || 0),
+                type: "loan",
+              });
+              navigate(`/payment?${params.toString()}`);
+            }}
+          >
+            Proceed with Payment
+          </button>
         </div>
 
         {error && (

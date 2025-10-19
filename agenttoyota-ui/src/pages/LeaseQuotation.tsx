@@ -165,6 +165,21 @@ export default function LeaseQuotation() {
           <button className="btn" onClick={() => navigate("/?mode=results")}>
             Back
           </button>
+          <button
+            className="btn"
+            style={{ background: TOYOTA_RED, color: "white", marginLeft: "auto" }}
+            onClick={() => {
+              const params = new URLSearchParams({
+                vehicle_name: vehicleName,
+                monthly_payment: String(data?.totals.monthly_payment_total || 0),
+                down_payment: String(data?.totals.acquisition_fee_financed || 0),
+                type: "lease",
+              });
+              navigate(`/payment?${params.toString()}`);
+            }}
+          >
+            Proceed with Payment
+          </button>
         </div>
 
         {error && (
