@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import ToyotaHeader from "./components/ToyotaHeader";
 import { LoadingOverlay } from "./components/Fields";
 import AuthCard from "./screens/Auth";
@@ -17,6 +18,7 @@ export default function App() {
   const [mode, setMode] = useState<Mode>("auth");
   const [user, setUser] = useState<{ name: string; email: string }>({ name: "", email: "" });
   const [loading, setLoading] = useState(false);
+  const location = useLocation();
 
   const [profile, setProfile] = useState<ProfileData>({
     income_annual_usd: "",
@@ -54,6 +56,19 @@ export default function App() {
       setLoading(false);
     }, 1000);
   };
+
+  // Support deep-linking back to results page: /?mode=results
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const m = params.get("mode");
+    if (m === "results") {
+      if (loans.length === 0 && leases.length === 0) {
+        setLoans(MOCK_LOANS);
+        setLeases(MOCK_LEASES);
+      }
+      setMode("results");
+    }
+  }, [location.search]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">

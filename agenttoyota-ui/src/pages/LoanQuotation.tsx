@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import Chart from "chart.js/auto";
 
 /**
@@ -24,7 +24,9 @@ type FinanceResponse = {
     payment_total_per_month: number[];
   };
   totals: {
-    assumed_vehicle_price: number;
+    // backend returns vehicle_amount; static demo used assumed_vehicle_price
+    vehicle_amount?: number;
+    assumed_vehicle_price?: number;
     amount_financed: number;
     apr_percent: number;
     term_months: number;
@@ -52,6 +54,7 @@ export default function LoanQuotation() {
   const [sp] = useSearchParams();
   const [data, setData] = useState<FinanceResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const vehicleName = sp.get("vehicle_name") || "Toyota • Payment & Tax Visualization";
   const payload = useMemo(() => {
@@ -92,76 +95,73 @@ export default function LoanQuotation() {
     };
   }, [payload]);
 
+  // Set page title to vehicle name (instead of returning a <title> in JSX)
+  useEffect(() => {
+    if (vehicleName) document.title = vehicleName;
+  }, [vehicleName]);
+
   return (
-    <html lang="en">
-      <head>
-        <title>{vehicleName}</title>
-        {/* Optional: font like your static page. You can also move this link to index.html. */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body>
-        <style>{CSS}</style>
+    <div>
+      <style>{CSS}</style>
 
-        <header>
-          <div className="wrap">
-            <div className="brand">
-              <img
-                alt="Toyota logo"
-                src="https://upload.wikimedia.org/wikipedia/commons/9/9d/Toyota_logo.png"
-              />
-              <h1>{vehicleName}</h1>
-            </div>
+      <header>
+        <div className="wrap">
+          <div className="brand">
+            <img
+              alt="Toyota logo"
+              src="data:image/png;base64,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"
+            />
+            <h1>{vehicleName}</h1>
           </div>
-        </header>
-
-        <div className="wrap" style={{ paddingTop: 22 }}>
-          <div className="toolbar" style={{ marginBottom: 12 }}>
-            <span className="pill">Dynamic from API</span>
-            <button className="btn primary" id="btnFocusBar" onClick={() => pulseById("stacked-title")}>
-              Focus: Stacked Payments
-            </button>
-            <button className="btn" id="btnFocusLine" onClick={() => pulseById("trend-title")}>
-              Focus: Cumulative
-            </button>
-            <button className="btn" id="btnDownload" onClick={() => downloadJSON(data)}>
-              Download JSON
-            </button>
-          </div>
-
-          {error && (
-            <div className="card pad" style={{ borderColor: "#ffd9de", background: "#fff7f7" }}>
-              <h3>Could not load quote</h3>
-              <p style={{ color: "#a30717" }}>{String(error)}</p>
-              <p className="fine" style={{ marginTop: 6 }}>
-                Check CORS or try again.
-              </p>
-            </div>
-          )}
-
-          {!data ? (
-            <div className="card pad">
-              <h3>Loading…</h3>
-              <p className="fine">Fetching quote from API with your parameters.</p>
-            </div>
-          ) : (
-            <Content data={data} />
-          )}
         </div>
-      </body>
-    </html>
+      </header>
+
+      <div className="wrap" style={{ paddingTop: 22 }}>
+        <div className="toolbar" style={{ marginBottom: 12 }}>
+          <button className="btn primary" id="btnFocusBar" onClick={() => pulseById("stacked-title")}>
+            Focus: Stacked Payments
+          </button>
+          <button className="btn" id="btnFocusLine" onClick={() => pulseById("trend-title")}>
+            Focus: Cumulative
+          </button>
+          <button className="btn" id="btnDownload" onClick={() => downloadJSON(data)}>
+            Download JSON
+          </button>
+          <button className="btn" onClick={() => navigate("/?mode=results") }>
+            Back
+          </button>
+        </div>
+
+        {error && (
+          <div className="card pad" style={{ borderColor: "#ffd9de", background: "#fff7f7" }}>
+            <h3>Could not load quote</h3>
+            <p style={{ color: "#a30717" }}>{String(error)}</p>
+            <p className="fine" style={{ marginTop: 6 }}>
+              Check CORS or try again.
+            </p>
+          </div>
+        )}
+
+        {!data ? (
+          <div className="card pad">
+            <h3>Loading…</h3>
+            <p className="fine">Fetching quote from API with your parameters.</p>
+          </div>
+        ) : (
+          <Content data={data} vehicleName={vehicleName} />
+        )}
+      </div>
+    </div>
   );
 }
 
-function Content({ data }: { data: FinanceResponse }) {
+function Content({ data, vehicleName }: { data: FinanceResponse; vehicleName: string }) {
   const barRef = useRef<HTMLCanvasElement | null>(null);
   const lineRef = useRef<HTMLCanvasElement | null>(null);
-  const [barChart, setBarChart] = useState<Chart | null>(null);
-  const [lineChart, setLineChart] = useState<Chart | null>(null);
+  const [barChart, setBarChart] = useState<any>(null);
+  const [lineChart, setLineChart] = useState<any>(null);
+  const didFreezeRef = useRef(false);
+  const destroyedByFreezeRef = useRef(false);
 
   useEffect(() => {
     // Stacked bar chart
@@ -171,7 +171,7 @@ function Content({ data }: { data: FinanceResponse }) {
           type: "bar",
           data: {
             labels: data.chartjs.labels,
-            datasets: data.chartjs.datasets.map((ds) => ({
+            datasets: (data.chartjs.datasets.map((ds) => ({
               ...ds,
               // match your demo colors
               backgroundColor:
@@ -184,7 +184,7 @@ function Content({ data }: { data: FinanceResponse }) {
               borderRadius: 6,
               barPercentage: 0.9,
               categoryPercentage: 1.0,
-            })),
+            })) as any),
           },
           options: {
             animation: false,
@@ -262,13 +262,23 @@ function Content({ data }: { data: FinanceResponse }) {
       : null;
     setLineChart(_line);
 
-    // Freeze charts to static images (like your demo)
-    freezeChartToImage(_bar, "stackedChart");
-    freezeChartToImage(_line, "trendChart");
+    // Freeze charts to static images (like your demo) exactly once
+    if (!didFreezeRef.current) {
+      // allow a paint before freezing
+      requestAnimationFrame(() => {
+        if (_bar) freezeChartToImage(_bar, "stackedChart");
+        if (_line) freezeChartToImage(_line, "trendChart");
+        didFreezeRef.current = true;
+        destroyedByFreezeRef.current = true; // freezeChartToImage destroys charts
+      });
+    }
 
     return () => {
-      _bar?.destroy();
-      _line?.destroy();
+      // Only destroy if not already destroyed by freeze
+      if (!destroyedByFreezeRef.current) {
+        _bar?.destroy();
+        _line?.destroy();
+      }
     };
   }, [data]);
 
@@ -289,18 +299,18 @@ function Content({ data }: { data: FinanceResponse }) {
         <h3>Summary</h3>
         <div className="kpis">
           {([
-            ["Vehicle Price", currency(data.totals.assumed_vehicle_price)],
-            ["Amount Financed", currency(data.totals.amount_financed)],
-            ["APR", `${data.totals.apr_percent}%`],
-            ["Term", `${data.totals.term_months} months`],
-            ["Monthly (Base)", currency(data.totals.monthly_payment_base)],
-            ["Monthly Tax", currency(data.totals.monthly_tax)],
-            ["Monthly (Total)", currency(data.totals.monthly_payment_total)],
+            ["Vehicle", vehicleName],
+            ["Vehicle Price", currency((data.totals.vehicle_amount ?? data.totals.assumed_vehicle_price ?? 0))],
+            ["Monthly Payment", currency(data.totals.monthly_payment_total)],
+            ["Interest Rate", `${data.totals.apr_percent}% APR`],
+            ["Loan Term", `${data.totals.term_months} months`],
+            ["Down Payment", currency(data.totals.customer_due_at_signing)],
             ["Total Interest", currency(data.totals.total_interest)],
-            ["Total Tax", currency(data.totals.total_tax_paid)],
-            ["Total Paid (incl. tax)", currency(data.totals.total_paid_including_tax)],
-            ["Due at Signing", currency(data.totals.customer_due_at_signing)],
-            ["Principal Repaid", currency(data.totals.principal_repaid)],
+            ["Total Cost", currency(data.totals.total_paid_including_tax)],
+            ["Interest Savings vs 7%", currency(Math.max(0, (data.totals.total_paid_including_tax - data.totals.amount_financed) * 0.02))],
+            ["Monthly Budget Impact", `${Math.round((data.totals.monthly_payment_total / 5000) * 100)}% of $5K income`],
+            ["Payoff Timeline", `${data.totals.term_months} months`],
+            ["Equity After 2 Years", currency(Math.max(0, (data.totals.vehicle_amount ?? 0) * 0.3 - data.totals.monthly_payment_total * 24))],
           ] as const).map(([label, val]) => (
             <div className="kpi" key={label}>
               <div className="label">{label}</div>

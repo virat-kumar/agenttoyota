@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type { LeaseRec, LoanRec } from "../types";
 
 const TOYOTA_RED = "#EB0A1E";
@@ -22,6 +23,18 @@ function CarImage({ src, alt }: { src: string; alt: string }) {
 }
 
 function LoanCard({ item }: { item: LoanRec }) {
+  const navigate = useNavigate();
+  const goToQuote = () => {
+    const params = new URLSearchParams({
+      vehicle_amount: String(item.carValue),
+      down_payment_cash: String(0),
+      term_months: String(60),
+      apr_percent: String(item.interestRate),
+      tax_rate: String(0.0825),
+      vehicle_name: item.vehicleName,
+    });
+    navigate(`/loan-quote?${params.toString()}`);
+  };
   return (
     <div className="rounded-2xl border border-gray-100 p-4 bg-white shadow-sm">
       <CarImage src={item.imageUrl} alt={item.vehicleName} />
@@ -37,11 +50,29 @@ function LoanCard({ item }: { item: LoanRec }) {
           <div className="font-semibold">{toUSD(item.monthlyEmi)}</div>
         </div>
       </div>
+      <div className="mt-3">
+        <button
+          onClick={goToQuote}
+          className="w-full rounded-xl px-4 py-2.5 font-medium text-white"
+          style={{ background: TOYOTA_RED }}
+        >
+          View Quote
+        </button>
+      </div>
     </div>
   );
 }
 
 function LeaseCard({ item }: { item: LeaseRec }) {
+  const navigate = useNavigate();
+  const goToLeaseQuote = () => {
+    const params = new URLSearchParams({
+      vehicle_amount: String(item.carValue),
+      term_months: String(36),
+      vehicle_name: item.vehicleName,
+    });
+    navigate(`/lease-quote?${params.toString()}`);
+  };
   return (
     <div className="rounded-2xl border border-gray-100 p-4 bg-white shadow-sm">
       <CarImage src={item.imageUrl} alt={item.vehicleName} />
@@ -52,6 +83,15 @@ function LeaseCard({ item }: { item: LeaseRec }) {
           <div className="text-xs text-gray-500">Monthly rent</div>
           <div className="font-semibold">{toUSD(item.monthlyRent)}</div>
         </div>
+      </div>
+      <div className="mt-3">
+        <button
+          onClick={goToLeaseQuote}
+          className="w-full rounded-xl px-4 py-2.5 font-medium text-white"
+          style={{ background: TOYOTA_RED }}
+        >
+          View Lease Quote
+        </button>
       </div>
     </div>
   );

@@ -39,7 +39,7 @@ def chat(payload: ChatRequest) -> ChatRequest:
     # RootModel[List[Turn]]: return using `root=...` in Pydantic v2
     return ChatRequest(root=response_turns)
 
-@app.post("/lease/calcular")
+@app.post("/lease/calculator")
 def lease_calcular(body: LeaseChartRequest) -> Dict[str, Any]:
     """
     Build Chart.js-ready lease breakdown WITHOUT tax.
