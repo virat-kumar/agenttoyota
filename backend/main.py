@@ -5,7 +5,7 @@ from typing import Any, Dict
 from fastapi.middleware.cors import CORSMiddleware  # <-- add this import
 
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from schemas import ChatRequest, Turn, LoanChartRequest, GetInterest, LeaseChartRequest
 from loan_calculator import build_loan_chartjs_data
 from credit_score_calculator import apr_percent_from_credit_score
