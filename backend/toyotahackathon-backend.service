@@ -1,0 +1,31 @@
+[Unit]
+Description=toyotahackathon backend (FastAPI/Uvicorn)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+# Run as the ubuntu user
+User=ubuntu
+Group=ubuntu
+
+# Your app directory
+WorkingDirectory=/home/ubuntu/agenttoyota/backend
+
+# If you keep env vars in a .env file, uncomment the next line
+# EnvironmentFile=-/home/ubuntu/agenttoyota/backend/.env
+Environment=PYTHONUNBUFFERED=1
+
+# Use the project's virtualenv Python to run Uvicorn
+ExecStart=/home/ubuntu/agenttoyota/.venv/bin/python -m uvicorn main:app --host 0.0.0.0 --port 5000
+
+# Restart behavior
+Restart=always
+RestartSec=2
+# Give it a little time to stop gracefully
+TimeoutStopSec=15
+
+# (Optional) Hardening
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
