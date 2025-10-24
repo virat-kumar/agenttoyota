@@ -1,4 +1,3 @@
-// /home/ubuntu/agenttoyota/agenttoyota-ui/vite.config.ts
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 

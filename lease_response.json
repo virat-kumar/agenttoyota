@@ -1,0 +1,130 @@
+{
+    "meta": {
+      "notes": [
+        "Tax intentionally excluded for parity with a tax-free loan setup."
+      ]
+    },
+    "chartjs": {
+      "labels": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "datasets": [
+        {
+          "label": "Depreciation",
+          "type": "bar",
+          "stack": "lease",
+          "data": [
+            116.33,
+            116.33,
+            116.33,
+            116.33,
+            116.33,
+            116.33
+          ]
+        },
+        {
+          "label": "Finance (Rent)",
+          "type": "bar",
+          "stack": "lease",
+          "data": [
+            1.35,
+            1.35,
+            1.35,
+            1.35,
+            1.35,
+            1.35
+          ]
+        }
+      ]
+    },
+    "timeseries": {
+      "cumulative_finance": [
+        1.35,
+        2.7,
+        4.05,
+        5.4,
+        6.75,
+        8.1
+      ],
+      "cumulative_total_paid": [
+        117.68,
+        235.36,
+        353.04,
+        470.72,
+        588.4,
+        706.08
+      ],
+      "payment_total_per_month": [
+        117.68,
+        117.68,
+        117.68,
+        117.68,
+        117.68,
+        117.68
+      ]
+    },
+    "totals": {
+      "vehicle_amount": 10,
+      "term_months": 6,
+      "residual_rate": 0.7,
+      "residual_value": 7,
+      "money_factor": 0.0019,
+      "apr_percent_est": 4.56,
+      "acquisition_fee_financed": 695,
+      "monthly_depreciation": 116.33,
+      "monthly_finance": 1.35,
+      "monthly_payment_total": 117.68,
+      "total_depreciation": 697.98,
+      "total_finance": 8.1,
+      "total_paid": 706.08
+    },
+    "schedule": [
+      {
+        "period": 1,
+        "depreciation": 116.33,
+        "finance": 1.35,
+        "payment_total": 117.68,
+        "residual_value_end": 7
+      },
+      {
+        "period": 2,
+        "depreciation": 116.33,
+        "finance": 1.35,
+        "payment_total": 117.68,
+        "residual_value_end": 7
+      },
+      {
+        "period": 3,
+        "depreciation": 116.33,
+        "finance": 1.35,
+        "payment_total": 117.68,
+        "residual_value_end": 7
+      },
+      {
+        "period": 4,
+        "depreciation": 116.33,
+        "finance": 1.35,
+        "payment_total": 117.68,
+        "residual_value_end": 7
+      },
+      {
+        "period": 5,
+        "depreciation": 116.33,
+        "finance": 1.35,
+        "payment_total": 117.68,
+        "residual_value_end": 7
+      },
+      {
+        "period": 6,
+        "depreciation": 116.33,
+        "finance": 1.35,
+        "payment_total": 117.68,
+        "residual_value_end": 7
+      }
+    ]
+  }
