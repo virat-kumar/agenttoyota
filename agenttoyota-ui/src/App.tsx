@@ -6,6 +6,7 @@ import AuthCard from "./screens/Auth";
 import Home from "./screens/Home";
 import ProfileForm from "./screens/ProfileForm";
 import RecommendationsView from "./screens/Recommendations";
+import Chatbot from "./screens/Chatbot";
 import type { ProfileData, LoanRec, LeaseRec } from "./types";
 import { MOCK_LOANS, MOCK_LEASES } from "./mock";
 
@@ -82,7 +83,10 @@ export default function App() {
       {loading && <LoadingOverlay message="Please wait..." />}
 
       <main className="flex-1">
-        <div className="max-w-5xl mx-auto px-4 py-10">
+        {mode === "chat" ? (
+          <Chatbot onBack={() => go("home")} />
+        ) : (
+          <div className="max-w-5xl mx-auto px-4 py-10">
           {mode === "auth" ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
               <div className="order-2 lg:order-1">
@@ -116,12 +120,13 @@ export default function App() {
           ) : (
             <div className="bg-white rounded-3xl border border-gray-100 p-10 shadow-sm min-h-[40vh] flex items-center justify-center">
               <div className="text-center max-w-xl">
-                <h1 className="text-2xl font-semibold mb-2" style={{ color: TOYOTA_GRAY }}>Chatbot</h1>
-                <p className="text-gray-600">Chat experience coming soon.</p>
+                <h1 className="text-2xl font-semibold mb-2" style={{ color: TOYOTA_GRAY }}>Page Not Found</h1>
+                <p className="text-gray-600">The page you're looking for doesn't exist.</p>
               </div>
             </div>
           )}
-        </div>
+          </div>
+        )}
       </main>
     </div>
   );
